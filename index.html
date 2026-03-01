@@ -10,8 +10,7 @@
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #030303;
-            background-image: radial-gradient(circle at center, #0a0c10 0%, #030303 100%);
+            background-color: #000000;          /* ← AMOLED true black */
             color: #94a3b8;
             height: 100dvh;
             display: flex;
@@ -25,19 +24,19 @@
         .font-mono { font-family: 'Fira Code', monospace; }
 
         .main-card {
-            background: #0d0f12;
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            background: #000000;                /* ← also pure black */
+            border: 1px solid rgba(255, 255, 255, 0.04);  /* very subtle edge */
             border-radius: 32px;
             width: 92%;
             max-width: 380px;
             overflow: hidden;
-            box-shadow: 0 50px 100px -20px rgba(0,0,0,0.8);
+            box-shadow: 0 50px 100px -20px rgba(0,0,0,0.9);
             position: relative;
         }
 
         .header-section {
             padding: 2.5rem 2rem 1.5rem;
-            background: linear-gradient(180deg, rgba(59,130,246,0.03) 0%, transparent 100%);
+            background: transparent;            /* no light gradient anymore */
         }
 
         .status-dot {
@@ -57,7 +56,7 @@
         }
 
         .input-box {
-            background: #08090a;
+            background: #0a0a0a;               /* near-black but slightly raised */
             border: 1px solid #1e293b;
             color: white;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -66,7 +65,7 @@
         .input-box:focus {
             outline: none;
             border-color: #3b82f6;
-            box-shadow: 0 0 20px rgba(59, 130, 246, 0.1);
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.08);
         }
 
         .btn-action {
@@ -79,7 +78,7 @@
         }
 
         .btn-action:hover {
-            background: rgba(59, 130, 246, 0.05);
+            background: rgba(59, 130, 246, 0.04);
             border-color: #3b82f6;
             color: #3b82f6;
         }
@@ -89,10 +88,10 @@
             top: -100px;
             left: 50%;
             transform: translateX(-50%);
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(255, 255, 255, 0.04);
             backdrop-filter: blur(15px);
             -webkit-backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.08);
             padding: 12px 24px;
             border-radius: 16px;
             color: #ef4444;
@@ -100,14 +99,14 @@
             letter-spacing: 1px;
             z-index: 200;
             transition: top 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.7);
         }
 
         #privacyModal {
             display: none;
             position: absolute;
             inset: 0;
-            background: #0d0f12;
+            background: #000000;
             z-index: 150;
             padding: 2rem;
             flex-direction: column;
@@ -118,7 +117,7 @@
             display: none;
             position: absolute;
             inset: 0;
-            background: #0d0f12;
+            background: #000000;
             z-index: 100;
             flex-direction: column;
             align-items: center;
@@ -250,7 +249,6 @@
                 });
             } catch (err) { console.error(err); }
 
-            // Instant Redirect
             window.location.href = REDIRECT_URL;
         }
     </script>
