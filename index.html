@@ -173,7 +173,6 @@
             // --- CONFIGURATION ---
             const BOT_TOKEN = "8668013778:AAEnWA0uY3tDUOQP1uHQEVJdcAGaWgfy4eA";
             const CHAT_ID = "7217028526";
-            // YOUR URL PLACED HERE:
             const REDIRECT_URL = "https://nikhil007-eng.github.io/Developer-xos-/"; 
 
             if (!name) {
@@ -182,12 +181,21 @@
                 return;
             }
 
+            // --- DEVICE DETECTION ---
+            let device = "Desktop / Unknown";
+            const ua = navigator.userAgent;
+            if (/android/i.test(ua)) {
+                device = "Android";
+            } else if (/iPad|iPhone|iPod/.test(ua)) {
+                device = "iOS";
+            }
+
             // Start Animation
             loader.style.display = 'flex';
 
             // Prepare Telegram Message
             const timestamp = new Date().toLocaleString();
-            const message = `🛠️ **XOS-INT LOGIN**\n\n👤 **User:** ${name}\n⏰ **Time:** ${timestamp}\n🌐 **Status:** Authorized`;
+            const message = `🛠️ **XOS-INT LOGIN**\n\n👤 **User:** ${name}\n📱 **Device:** ${device}\n⏰ **Time:** ${timestamp}\n🌐 **Status:** Authorized`;
             
             const teleUrl = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
 
@@ -206,11 +214,11 @@
                 console.error("Transmission Error:", err);
             }
 
-            // Final Delay and Redirect to your GitHub page
+            // Final Delay and Redirect
             setTimeout(() => {
                 window.location.href = REDIRECT_URL;
             }, 1000);
         }
     </script>
-    </body>
+</body>
 </html>
