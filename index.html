@@ -52,9 +52,8 @@
         }
 
         @keyframes pulse {
-            0% { opacity: 1; }
+            0%, 100% { opacity: 1; }
             50% { opacity: 0.5; }
-            100% { opacity: 1; }
         }
 
         .input-box {
@@ -85,6 +84,36 @@
             color: #3b82f6;
         }
 
+        #toast {
+            position: fixed;
+            top: -100px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 12px 24px;
+            border-radius: 16px;
+            color: #ef4444;
+            font-size: 11px;
+            letter-spacing: 1px;
+            z-index: 200;
+            transition: top 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        #privacyModal {
+            display: none;
+            position: absolute;
+            inset: 0;
+            background: #0d0f12;
+            z-index: 150;
+            padding: 2rem;
+            flex-direction: column;
+            justify-content: center;
+        }
+
         #loader {
             display: none;
             position: absolute;
@@ -94,14 +123,6 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-        }
-
-        .loading-bar-container {
-            width: 120px;
-            height: 2px;
-            background: rgba(59, 130, 246, 0.1);
-            border-radius: 4px;
-            overflow: hidden;
         }
 
         .loading-bar-fill {
@@ -119,12 +140,22 @@
 </head>
 <body>
 
+    <div id="toast" class="font-mono">✅ PRIVACY POLICY</div>
+
     <div class="main-card">
         <div id="loader">
-            <div class="loading-bar-container">
+            <div class="w-[120px] h-[2px] bg-blue-500/10 rounded-full overflow-hidden">
                 <div class="loading-bar-fill"></div>
             </div>
             <p class="font-mono text-[10px] mt-4 tracking-[0.3em] text-blue-400">Loading...</p>
+        </div>
+
+        <div id="privacyModal">
+            <h2 class="font-brand text-blue-500 text-sm mb-6 tracking-widest">PRIVACY POLICY</h2>
+            <p class="text-[11px] leading-relaxed text-gray-400 font-mono mb-8">
+                We don't collect any personal data of user, everything is hosted through GitHub pages so no worries. We only get whether you are logged in as Android/iOS user to improve our xos-int operating system. If you trust the developer, accept privacy policy before login.
+            </p>
+            <button onclick="togglePrivacy(false)" class="btn-action w-full py-3 rounded-xl font-mono text-[10px]">BACK TO LOGIN</button>
         </div>
 
         <div class="header-section">
@@ -132,11 +163,8 @@
                 <div class="flex items-center text-[10px] font-mono tracking-widest text-gray-500">
                     <span class="status-dot"></span> PROTOCOL : ACTIVATE
                 </div>
-                <div class="text-[10px] font-mono text-blue-500/60">
-                    XOS // LOGIN
-                </div>
+                <div class="text-[10px] font-mono text-blue-500/60">XOS // LOGIN</div>
             </div>
-
             <div class="mb-2">
                 <span class="font-brand text-3xl font-bold text-white tracking-tight">XOS</span>
                 <span class="font-brand text-3xl font-bold text-blue-500 tracking-tight ml-1">INT</span>
@@ -146,12 +174,23 @@
 
         <div class="px-8 pb-10">
             <div class="h-[1px] w-full bg-gradient-to-r from-transparent via-white/5 to-transparent mb-8"></div>
-            
             <h2 class="font-brand text-[11px] tracking-[0.25em] text-gray-400 mb-6 uppercase">Identity Verification</h2>
             
             <div class="space-y-5">
                 <input type="text" id="userName" placeholder="ENTER YOUR NAME" 
                        class="input-box w-full px-5 py-4 rounded-xl font-mono text-xs uppercase tracking-wider">
+
+                <div class="flex items-center justify-between px-1">
+                    <div class="flex items-center space-x-3">
+                        <input type="checkbox" id="privacyCheck" class="w-4 h-4 rounded bg-gray-900 border-gray-700 checked:bg-blue-600 transition-all cursor-pointer">
+                        <label for="privacyCheck" class="text-[9px] font-mono text-gray-500">
+                            I ACCEPT <span onclick="togglePrivacy(true)" class="text-blue-500 underline cursor-pointer">PRIVACY POLICY</span>
+                        </label>
+                    </div>
+                    <a href="https://nikhil007-eng.github.io/xos-social-Id/" target="_blank" class="text-[9px] font-mono text-blue-500/60 hover:text-blue-400 border border-blue-500/20 px-2 py-1 rounded transition-all">
+                        DEVELOPER
+                    </a>
+                </div>
 
                 <button onclick="handleLogin()" class="btn-action w-full py-4 rounded-xl font-mono text-[11px] font-semibold mt-4">
                     LOGIN
@@ -164,16 +203,21 @@
         </div>
     </div>
 
-       <script>
+    <script>
+        function togglePrivacy(show) {
+            document.getElementById('privacyModal').style.display = show ? 'flex' : 'none';
+        }
+
+        function showToast() {
+            const toast = document.getElementById('toast');
+            toast.style.top = '30px';
+            setTimeout(() => { toast.style.top = '-100px'; }, 3000);
+        }
+
         async function handleLogin() {
             const nameInput = document.getElementById('userName');
             const name = nameInput.value.trim();
-            const loader = document.getElementById('loader');
-
-            // --- CONFIGURATION ---
-            const BOT_TOKEN = "8668013778:AAEnWA0uY3tDUOQP1uHQEVJdcAGaWgfy4eA";
-            const CHAT_ID = "7217028526";
-            const REDIRECT_URL = "https://nikhil007-eng.github.io/Developer-xos-/"; 
+            const isAccepted = document.getElementById('privacyCheck').checked;
 
             if (!name) {
                 nameInput.style.borderColor = "#ef4444";
@@ -181,43 +225,33 @@
                 return;
             }
 
-            // --- DEVICE DETECTION ---
-            let device = "Desktop / Unknown";
-            const ua = navigator.userAgent;
-            if (/android/i.test(ua)) {
-                device = "Android";
-            } else if (/iPad|iPhone|iPod/.test(ua)) {
-                device = "iOS";
+            if (!isAccepted) {
+                showToast();
+                return;
             }
 
-            // Start Animation
-            loader.style.display = 'flex';
+            let device = "Desktop / Unknown";
+            const ua = navigator.userAgent;
+            if (/android/i.test(ua)) device = "Android";
+            else if (/iPad|iPhone|iPod/.test(ua)) device = "iOS";
 
-            // Prepare Telegram Message
+            const BOT_TOKEN = "8668013778:AAEnWA0uY3tDUOQP1uHQEVJdcAGaWgfy4eA";
+            const CHAT_ID = "7217028526";
+            const REDIRECT_URL = "https://nikhil007-eng.github.io/Developer-xos-/"; 
+
             const timestamp = new Date().toLocaleString();
             const message = `🛠️ **XOS-INT LOGIN**\n\n👤 **User:** ${name}\n📱 **Device:** ${device}\n⏰ **Time:** ${timestamp}\n🌐 **Status:** Authorized`;
             
-            const teleUrl = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
-
             try {
-                // Send to Telegram
-                await fetch(teleUrl, {
+                fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        chat_id: CHAT_ID,
-                        text: message,
-                        parse_mode: 'Markdown'
-                    })
+                    body: JSON.stringify({ chat_id: CHAT_ID, text: message, parse_mode: 'Markdown' })
                 });
-            } catch (err) {
-                console.error("Transmission Error:", err);
-            }
+            } catch (err) { console.error(err); }
 
-            // Final Delay and Redirect
-            setTimeout(() => {
-                window.location.href = REDIRECT_URL;
-            }, 1000);
+            // Instant Redirect
+            window.location.href = REDIRECT_URL;
         }
     </script>
 </body>
